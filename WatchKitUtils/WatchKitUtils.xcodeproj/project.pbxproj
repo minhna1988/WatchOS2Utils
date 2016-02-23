@@ -19,6 +19,8 @@
 		E7865E0B1C7C44FB00B88FD5 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E0A1C7C44FB00B88FD5 /* InterfaceController.swift */; };
 		E7865E0D1C7C44FB00B88FD5 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E0C1C7C44FB00B88FD5 /* ExtensionDelegate.swift */; };
 		E7865E0F1C7C44FB00B88FD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */; };
+		E7865E1F1C7C47FC00B88FD5 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
+		E7865E201C7C47FC00B88FD5 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,7 @@
 		E7865E0C1C7C44FB00B88FD5 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7865E101C7C44FB00B88FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E7865E1E1C7C47FC00B88FD5 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +106,7 @@
 		E7865DDB1C7C44FB00B88FD5 = {
 			isa = PBXGroup;
 			children = (
+				E7865E1E1C7C47FC00B88FD5 /* Connection.swift */,
 				E7865DE61C7C44FB00B88FD5 /* WatchKitUtils */,
 				E7865DFA1C7C44FB00B88FD5 /* WatchKitUtils WatchKit App */,
 				E7865E091C7C44FB00B88FD5 /* WatchKitUtils WatchKit Extension */,
@@ -287,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7865DEA1C7C44FB00B88FD5 /* ViewController.swift in Sources */,
+				E7865E1F1C7C47FC00B88FD5 /* Connection.swift in Sources */,
 				E7865DE81C7C44FB00B88FD5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7865E0D1C7C44FB00B88FD5 /* ExtensionDelegate.swift in Sources */,
+				E7865E201C7C47FC00B88FD5 /* Connection.swift in Sources */,
 				E7865E0B1C7C44FB00B88FD5 /* InterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -488,7 +494,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				INFOPLIST_FILE = WatchKitUtils/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -499,7 +507,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				INFOPLIST_FILE = WatchKitUtils/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
