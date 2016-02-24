@@ -11,8 +11,6 @@ import Foundation
 
 
 class InterfaceController: WKInterfaceController {
-    
-    let connection: Connection! = Connection.getInstance
 
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)

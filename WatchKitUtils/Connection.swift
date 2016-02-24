@@ -9,21 +9,25 @@
 import Foundation
 import WatchConnectivity
 
+let kConnectionStateDidChange: String = "ConnectionStateDidChange"
+
 class Connection: NSObject, WCSessionDelegate {
+    
+    enum ConnectionState: String{
+        case NotPair = "Device is not pair"
+        case Paired  = "Device is paired"
+        case AppNotInstall = "Application is not installed on watch"
+        case AppInstalled  = "Application is installed on watch"
+        case Reachable   = "Device is reached"
+        case UnReachable = "Device is unreached"
+    }
     
     var session: WCSession! = nil
     
-    class var getInstance: Connection{
-        struct Static {
-            static var token: dispatch_once_t = 0
-            static var instance: Connection! = nil
+    var state = String(){
+        didSet{
+            didChangeValueForKey(kConnectionStateDidChange)
         }
-        
-        dispatch_once(&Static.token) { () -> Void in
-            Static.instance = Connection()
-        }
-        
-        return Static.instance
     }
     
     override init() {
@@ -34,42 +38,26 @@ class Connection: NSObject, WCSessionDelegate {
             self.session.delegate = self
             self.session.activateSession()
         }
-        
     }
     
     // MARK: WCSession Delegate
     #if os(iOS)
     func sessionWatchStateDidChange(session: WCSession) {
         if (!session.paired){
-            print("Not pair")
+            self.state = ConnectionState.NotPair.rawValue
             return
         }
-        
+        self.state = ConnectionState.Paired.rawValue
         if (!session.watchAppInstalled){
-            print("Not install")
+            self.state = ConnectionState.AppNotInstall.rawValue
             return
         }
+        self.state = ConnectionState.AppInstalled.rawValue
     }
     #endif
     
     func sessionReachabilityDidChange(session: WCSession) {
-        let status = session.reachable ? "Reachable" : "UnReachable"
-        print("sessionReachabilityDidChange is \(status)")
+        self.state = session.reachable ? ConnectionState.Reachable.rawValue : ConnectionState.UnReachable.rawValue
     }
-    
-    // MARK: WSession Receive message
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
-        
-    }
-    
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
-        
-    }
-    
-    // MARK: WSession Receive message with data
-    func session(session: WCSession, didReceiveMessageData messageData: NSData) {
-        
-    }
-    
     
 }
