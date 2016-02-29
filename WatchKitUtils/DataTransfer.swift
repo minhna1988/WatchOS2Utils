@@ -37,7 +37,7 @@ class DataTransfer: Connection {
     // MARK: Message
     func sendMessage(message: [String : AnyObject]){
         if (!self.session.reachable){
-            self.didReceiveMessage([ResponseCode.Error.rawValue: self.state])
+            self.didReceiveMessage([ResponseCode.Error.rawValue: self.state!.rawValue])
             return
         }
         

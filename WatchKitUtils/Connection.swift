@@ -9,7 +9,7 @@
 import Foundation
 import WatchConnectivity
 
-let kConnectionStateDidChange: String = "ConnectionStateDidChange"
+let kConnectionChange: String = "state"
 
 class Connection: NSObject, WCSessionDelegate {
     
@@ -24,40 +24,53 @@ class Connection: NSObject, WCSessionDelegate {
     
     var session: WCSession! = nil
     
-    var state = String(){
+    var state: ConnectionState! = ConnectionState(rawValue: "Device is not pair"){
+        willSet{
+            willChangeValueForKey(kConnectionChange)
+        }
         didSet{
-            didChangeValueForKey(kConnectionStateDidChange)
+            didChangeValueForKey(kConnectionChange)
         }
     }
     
     override init() {
         super.init()
-        
+    }
+    
+    func connect(){
         if (WCSession.isSupported()){
             self.session = WCSession.defaultSession()
             self.session.delegate = self
             self.session.activateSession()
         }
+        #if os(iOS)
+            self.sessionWatchStateDidChange(self.session)
+        #endif
     }
     
     // MARK: WCSession Delegate
     #if os(iOS)
     func sessionWatchStateDidChange(session: WCSession) {
         if (!session.paired){
-            self.state = ConnectionState.NotPair.rawValue
+            self.state = ConnectionState.NotPair
             return
         }
-        self.state = ConnectionState.Paired.rawValue
+    
         if (!session.watchAppInstalled){
-            self.state = ConnectionState.AppNotInstall.rawValue
+            self.state = ConnectionState.AppNotInstall
             return
         }
-        self.state = ConnectionState.AppInstalled.rawValue
+    
+        if (!session.reachable){
+            self.state = ConnectionState.AppInstalled
+            return
+        }
     }
     #endif
     
+    // This function only call when the user open watch app
     func sessionReachabilityDidChange(session: WCSession) {
-        self.state = session.reachable ? ConnectionState.Reachable.rawValue : ConnectionState.UnReachable.rawValue
+        self.state = session.reachable ? ConnectionState.Reachable : ConnectionState.UnReachable
     }
     
 }
