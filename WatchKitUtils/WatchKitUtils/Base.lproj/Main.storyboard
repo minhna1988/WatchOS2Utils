@@ -89,7 +89,7 @@
                                                         <action selector="didTapSendButton:" destination="FXh-L4-Onp" eventType="touchUpInside" id="pPy-io-f3a"/>
                                                     </connections>
                                                 </button>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ijg-zM-mQa">
+                                                <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ijg-zM-mQa">
                                                     <rect key="frame" x="115" y="7" width="420" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="sfM-Ji-sGK"/>
@@ -140,7 +140,7 @@
                                                         <action selector="didTapSendButton:" destination="FXh-L4-Onp" eventType="touchUpInside" id="92T-Eb-iY8"/>
                                                     </connections>
                                                 </button>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Tap to browse you file" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tqL-Cz-eKH">
+                                                <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Tap to browse you file" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tqL-Cz-eKH">
                                                     <rect key="frame" x="115" y="7" width="420" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="AbW-RL-Kj8"/>

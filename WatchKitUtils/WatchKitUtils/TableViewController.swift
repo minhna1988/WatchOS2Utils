@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import Photos
+import AVFoundation
 
-class TableViewController: UITableViewController, UITextFieldDelegate {
+class TableViewController: UITableViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     enum ActionType: Int {
         case SendMessage = 1
@@ -58,6 +60,7 @@ class TableViewController: UITableViewController, UITextFieldDelegate {
             self.connection.sendMessage(["Message": messageTextField.text!])
                 break
             case .SendFile:
+                
                 break
             case .SendData:
                 break
@@ -75,5 +78,95 @@ class TableViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    // MARK: Text Field Delegate
+    func textFieldDidBeginEditing(textField: UITextField) {
+        let type: ActionType = ActionType(rawValue: textField.tag)!
+        switch (type){
+        case .SendMessage:
+            break
+        case .SendFile:
+            self.openPhoto(UIImagePickerControllerSourceType.PhotoLibrary)
+            break;
+        default:
+            break
+        }
+    }
     
+    // MARK: Working with Photos and Camera
+    func openPhoto(sourceType: UIImagePickerControllerSourceType){
+        
+        if (!self.checkPermission(sourceType)){
+            return
+        }
+        
+        let picker: UIImagePickerController = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = false;
+        picker.sourceType = sourceType;
+        
+        self.presentViewController(picker, animated: true, completion: nil)
+    }
+    
+    func checkPermission(sourceType: UIImagePickerControllerSourceType)->Bool{
+        switch (sourceType){
+        case UIImagePickerControllerSourceType.PhotoLibrary:
+            let permission: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+            if (permission == PHAuthorizationStatus.Restricted || permission == PHAuthorizationStatus.Denied){
+                self.showMessage("Open settings to allow app access Photos")
+                return false
+            }
+            return true
+        case UIImagePickerControllerSourceType.Camera:
+            let permission: AVAuthorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+            if (permission == AVAuthorizationStatus.Restricted || permission == AVAuthorizationStatus.Denied){
+                self.showMessage("Open settings to allow app access Camera")
+                return false
+            }
+            return true
+        default:
+            return false
+        }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        if (editingInfo == nil){
+            return
+        }
+        
+        let image: UIImage? = editingInfo![UIImagePickerControllerOriginalImage] as! UIImage?;
+        if (image == nil) {
+            return
+        }
+        
+        switch (picker.sourceType){
+        case .PhotoLibrary:
+            break
+        case .Camera:
+            var localId: String = ""
+            let library: PHPhotoLibrary = PHPhotoLibrary()
+            library.performChanges({ () -> Void in
+                let assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image!)
+                localId = assetChangeRequest.placeholderForCreatedAsset!.localIdentifier
+                }, completionHandler: { (success, error) -> Void in
+                    if (!success){
+                        self.showMessage(error!.description)
+                        return
+                    }
+            })
+            break
+        default:
+            break
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func showMessage(message: String){
+        let cancelAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
+        let alertView: UIAlertController = UIAlertController(title: "", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alertView.addAction(cancelAction)
+        self.presentViewController(alertView, animated: true, completion: nil)
+    }
 }
