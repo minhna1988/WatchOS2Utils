@@ -28,12 +28,34 @@ class TableViewController: UITableViewController, UITextFieldDelegate {
         self.connection = DataTransfer.getInstance
         self.connection.addObserver(self, forKeyPath: kConnectionChange, options: NSKeyValueObservingOptions(), context: nil)
         self.connection.connect()
+        
+        if (self.connection.didReceiveMessage == nil){
+            self.connection.didReceiveMessage = { (message) -> Void in
+                let msg = message["Message"] as! String?
+                if (msg == nil){
+                    return
+                }
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.receivedLabel.text = msg!
+                })
+            }
+        }
+        
+        if (self.connection.didFinisTransferFile == nil){
+            self.connection.didFinisTransferFile = { (url, metadata) -> Void in
+                print("\(url)");
+            }
+        }
     }
     
     @IBAction func didTapSendButton(sender: UIButton) {
         let type: ActionType = ActionType(rawValue: sender.tag)!
         switch (type){
-            case .SendMessage:
+        case .SendMessage:
+            if (self.messageTextField.text == nil){
+                return
+            }
+            self.connection.sendMessage(["Message": messageTextField.text!])
                 break
             case .SendFile:
                 break
@@ -52,4 +74,6 @@ class TableViewController: UITableViewController, UITextFieldDelegate {
             }
         }
     }
+    
+    
 }
