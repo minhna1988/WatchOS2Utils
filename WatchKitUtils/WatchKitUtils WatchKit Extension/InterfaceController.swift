@@ -16,7 +16,6 @@ class InterfaceController: WKInterfaceController {
 
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
-        
         // Configure interface objects here.
         self.connection = DataTransfer.getInstance
         self.connection.addObserver(self, forKeyPath: kConnectionChange, options: NSKeyValueObservingOptions(), context: nil)
@@ -26,6 +25,7 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        
     }
 
     override func didDeactivate() {
@@ -36,8 +36,9 @@ class InterfaceController: WKInterfaceController {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if (object === self.connection){
             if (keyPath == kConnectionChange){
-                print("\(change)")
-                //self.connectionStateLabel.text =
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.setTitle(self.connection.state.rawValue)
+                })
             }
         }
     }

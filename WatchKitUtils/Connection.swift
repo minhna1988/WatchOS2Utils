@@ -14,12 +14,12 @@ let kConnectionChange: String = "state"
 class Connection: NSObject, WCSessionDelegate {
     
     enum ConnectionState: String{
-        case NotPair = "Device is not pair"
-        case Paired  = "Device is paired"
-        case AppNotInstall = "Application is not installed on watch"
-        case AppInstalled  = "Application is installed on watch"
-        case Reachable   = "Device is reached"
-        case UnReachable = "Device is unreached"
+        case NotPair = "Not pair"
+        case Paired  = "Paired"
+        case AppNotInstall = "App is not installed on watch"
+        case AppInstalled  = "App is installed on watch"
+        case Reachable   = "Connected"
+        case UnReachable = "Not Connect"
     }
     
     var session: WCSession! = nil
@@ -43,9 +43,7 @@ class Connection: NSObject, WCSessionDelegate {
             self.session.delegate = self
             self.session.activateSession()
         }
-        #if os(iOS)
-            self.sessionWatchStateDidChange(self.session)
-        #endif
+        self.sessionReachabilityDidChange(self.session)
     }
     
     // MARK: WCSession Delegate
@@ -61,10 +59,7 @@ class Connection: NSObject, WCSessionDelegate {
             return
         }
     
-        if (!session.reachable){
-            self.state = ConnectionState.AppInstalled
-            return
-        }
+        self.state = session.reachable ? ConnectionState.Reachable : ConnectionState.UnReachable
     }
     #endif
     
