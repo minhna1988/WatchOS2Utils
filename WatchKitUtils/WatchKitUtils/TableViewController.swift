@@ -23,7 +23,10 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var browseFileTextField: UITextField!
     
+    var tempDirectory: String = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last!
+    
     var connection: DataTransfer! = nil
+    var watchSize: CGSize = CGSizeMake(272, 340)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,13 +42,25 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
                 }
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.receivedLabel.text = msg!
+                    if (msg == "ScreenSize"){
+                        self.receivedLabel.text = message["Content"] as! String!
+                        self.watchSize = CGSizeFromString(self.receivedLabel.text!)
+                    }
                 })
             }
         }
         
-        if (self.connection.didFinisTransferFile == nil){
-            self.connection.didFinisTransferFile = { (url, metadata) -> Void in
-                print("\(url)");
+        if (self.connection.didFinishTransferFile == nil){
+            self.connection.didFinishTransferFile = { (file, error) -> Void in
+
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.browseFileTextField.enabled = true
+                    if (error != nil){
+                        self.browseFileTextField.text = "Error: \(error!.description)"
+                    } else {
+                        self.browseFileTextField.text = "Sent: \(file.file.fileURL.absoluteString)"
+                    }
+                })
             }
         }
     }
@@ -128,31 +143,61 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
-        if (editingInfo == nil){
-            return
-        }
+    // MARK: UIImagePicker Delegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
-        let image: UIImage? = editingInfo![UIImagePickerControllerOriginalImage] as! UIImage?;
+        print("\(info)");
+        var image: UIImage? = info[UIImagePickerControllerOriginalImage] as! UIImage?;
         if (image == nil) {
             return
         }
         
         switch (picker.sourceType){
         case .PhotoLibrary:
+            picker.dismissViewControllerAnimated(true, completion: { () -> Void in
+                let urlString = (info["UIImagePickerControllerReferenceURL"] as! NSURL).absoluteString
+                let startRange = urlString.rangeOfString("id=")
+                let endRange = urlString.rangeOfString("&ext=")
+                if (startRange != nil && endRange != nil) {
+                    let id = urlString.substringWithRange(Range(start: startRange!.endIndex, end: endRange!.startIndex))
+                    let ext = urlString.substringWithRange(Range(start: endRange!.endIndex, end: urlString.endIndex)).lowercaseString
+                    let path = self.tempDirectory.stringByAppendingFormat("/%@.%@", id, ext)
+                    print("\(path)");
+                    
+                    image = self.resizeImage(image!, targetSize: self.watchSize)
+                    
+                    let imageData = ext == "jpg" ? UIImageJPEGRepresentation(image!, 1.0) : (ext == "png" ? UIImagePNGRepresentation(image!) : nil)
+                    if (imageData == nil){
+                        return
+                    }
+                    let success = imageData!.writeToFile(path, atomically: true)
+                    if (!success){
+                        return
+                    }
+                    self.browseFileTextField.enabled = false
+                    self.browseFileTextField.text = "Sending..."
+                    self.connection.sendFile(NSURL(fileURLWithPath: path), metadata: ["name":id, "ext":ext])
+                }
+            })
             break
         case .Camera:
             var localId: String = ""
             let library: PHPhotoLibrary = PHPhotoLibrary()
-            library.performChanges({ () -> Void in
-                let assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image!)
-                localId = assetChangeRequest.placeholderForCreatedAsset!.localIdentifier
-                }, completionHandler: { (success, error) -> Void in
-                    if (!success){
-                        self.showMessage(error!.description)
-                        return
-                    }
-            })
+            library.performChanges(
+                { () -> Void in
+                    let assetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image!)
+                    localId = assetChangeRequest.placeholderForCreatedAsset!.localIdentifier
+                    print("\(localId)")
+                }, completionHandler:
+                { (success, error) -> Void in
+                    picker.dismissViewControllerAnimated(true, completion: { () -> Void in
+                        if (!success){
+                            self.showMessage(error!.description)
+                            return
+                        }
+                    })
+                }
+            )
             break
         default:
             break
@@ -163,10 +208,59 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    // MARK: Support Function
     func showMessage(message: String){
         let cancelAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
         let alertView: UIAlertController = UIAlertController(title: "", message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alertView.addAction(cancelAction)
         self.presentViewController(alertView, animated: true, completion: nil)
+    }
+    
+    func getAssetUrl(mPhasset : PHAsset, completionHandler : ((responseURL : NSURL?) -> Void)){
+        
+        if mPhasset.mediaType == .Image {
+            let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
+            options.canHandleAdjustmentData = {(adjustmeta: PHAdjustmentData) -> Bool in
+                return true
+            }
+            mPhasset.requestContentEditingInputWithOptions(options, completionHandler: {(contentEditingInput: PHContentEditingInput?, info: [NSObject : AnyObject]) -> Void in
+                completionHandler(responseURL : contentEditingInput!.fullSizeImageURL)
+            })
+        } else if mPhasset.mediaType == .Video {
+            let options: PHVideoRequestOptions = PHVideoRequestOptions()
+            options.version = .Original
+            PHImageManager.defaultManager().requestAVAssetForVideo(mPhasset, options: options, resultHandler: {(asset: AVAsset?, audioMix: AVAudioMix?, info: [NSObject : AnyObject]?) -> Void in
+                
+                if let urlAsset = asset as? AVURLAsset {
+                    let localVideoUrl : NSURL = urlAsset.URL
+                    completionHandler(responseURL : localVideoUrl)
+                } else {
+                    completionHandler(responseURL : nil)
+                }
+            })
+        }
+    }
+    
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / image.size.width
+        let heightRatio = targetSize.height / image.size.height
+        
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+        } else {
+            newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+        }
+        
+        let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.drawInRect(rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
 }

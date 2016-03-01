@@ -17,7 +17,7 @@ class DataTransfer: Connection {
     
     var didReceiveMessage: ([String : AnyObject]->Void)! = nil
     var didReceiveFile: ((NSURL, [String:AnyObject]?)->Void)! = nil
-    var didFinisTransferFile: ((WCSessionFileTransfer, NSError?)->Void)! = nil
+    var didFinishTransferFile: ((WCSessionFileTransfer, NSError?)->Void)! = nil
     
     
     class var getInstance: DataTransfer{
@@ -70,8 +70,8 @@ class DataTransfer: Connection {
     }
     
     func session(session: WCSession, didFinishFileTransfer fileTransfer: WCSessionFileTransfer, error: NSError?) {
-        if (self.didFinisTransferFile != nil){
-            self.didFinisTransferFile(fileTransfer, error)
+        if (self.didFinishTransferFile != nil){
+            self.didFinishTransferFile(fileTransfer, error)
         }
     }
 }

@@ -10,7 +10,7 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="WatchKitUtils_WatchKit_App" customModuleProvider="target">
                     <items>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" id="WCa-mL-dc6">
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" contentMode="scaleAspectFill" layout="vertical" id="WCa-mL-dc6">
                             <items>
                                 <label width="1" alignment="center" textAlignment="center" numberOfLines="0" id="AhX-tC-nCa"/>
                                 <button width="1" alignment="center" verticalAlignment="bottom" title="Send" id="KJS-RS-jcA">
@@ -22,6 +22,7 @@
                         </group>
                     </items>
                     <connections>
+                        <outlet property="mainGroup" destination="WCa-mL-dc6" id="CbE-nf-gxa"/>
                         <outlet property="messageLabel" destination="AhX-tC-nCa" id="pHS-C5-PSl"/>
                         <outlet property="sendButton" destination="KJS-RS-jcA" id="q8E-Fp-uB1"/>
                     </connections>

@@ -13,9 +13,11 @@ import Foundation
 class InterfaceController: WKInterfaceController {
     
     var connection: DataTransfer! = nil
+    var tempDirectory: String = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last!
     
     @IBOutlet var messageLabel: WKInterfaceLabel!
     @IBOutlet var sendButton: WKInterfaceButton!
+    @IBOutlet var mainGroup: WKInterfaceGroup!
 
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
@@ -36,11 +38,42 @@ class InterfaceController: WKInterfaceController {
             }
         }
         
-        if (self.connection.didFinisTransferFile == nil){
-            self.connection.didFinisTransferFile = { (url, metadata) -> Void in
+        if (self.connection.didFinishTransferFile == nil){
+            self.connection.didFinishTransferFile = { (url, metadata) -> Void in
                 print("\(url)");
             }
         }
+        
+        if (self.connection.didReceiveFile == nil){
+            self.connection.didReceiveFile = { (url, metadata) -> Void in
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let data = NSData(contentsOfURL: url)
+                    if (data == nil){
+                        return
+                    }
+                    
+                    var image = UIImage(data: data!)
+                    if (metadata != nil){
+                        let ext = metadata!["ext"] as! String
+                        let name = metadata!["name"] as! String
+                        let path = self.tempDirectory.stringByAppendingFormat("/%@.%@", name, ext)
+                        let success = data!.writeToFile(path, atomically: true)
+                        image = success ? UIImage(contentsOfFile: path) : UIImage(data: data!)
+                        self.messageLabel.setText(name)
+                    }
+                    
+                    self.mainGroup.setBackgroundImage(image);
+                })
+            }
+        }
+    }
+    
+    func replyForScreenSize(){
+        let currentDevice = WKInterfaceDevice.currentDevice()
+        let bounds = currentDevice.screenBounds
+        let scale = currentDevice.screenScale
+        let size = NSStringFromCGSize(CGSizeMake(bounds.size.width*scale, bounds.size.height*scale))
+        self.connection.sendMessage(["Message": "ScreenSize", "Content": size])
     }
 
     override func willActivate() {
