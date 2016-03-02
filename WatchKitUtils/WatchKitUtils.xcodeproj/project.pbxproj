@@ -10,6 +10,7 @@
 		E72278311C7D7D3700E37AB1 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72278301C7D7D3700E37AB1 /* TableViewController.swift */; };
 		E72278351C7D86EC00E37AB1 /* DataTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72278341C7D86EC00E37AB1 /* DataTransfer.swift */; };
 		E72278361C7D86EC00E37AB1 /* DataTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72278341C7D86EC00E37AB1 /* DataTransfer.swift */; };
+		E738CC221C8680930011DD33 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
 		E7865DE81C7C44FB00B88FD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865DE71C7C44FB00B88FD5 /* AppDelegate.swift */; };
 		E7865DEA1C7C44FB00B88FD5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865DE91C7C44FB00B88FD5 /* ViewController.swift */; };
 		E7865DED1C7C44FB00B88FD5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7865DEB1C7C44FB00B88FD5 /* Main.storyboard */; };
@@ -23,7 +24,6 @@
 		E7865E0D1C7C44FB00B88FD5 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E0C1C7C44FB00B88FD5 /* ExtensionDelegate.swift */; };
 		E7865E0F1C7C44FB00B88FD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */; };
 		E7865E1F1C7C47FC00B88FD5 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
-		E7865E201C7C47FC00B88FD5 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +71,9 @@
 /* Begin PBXFileReference section */
 		E72278301C7D7D3700E37AB1 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		E72278341C7D86EC00E37AB1 /* DataTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTransfer.swift; sourceTree = "<group>"; };
+		E738CC231C8683680011DD33 /* WatchKitUtils.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = WatchKitUtils.entitlements; sourceTree = "<group>"; };
+		E738CC241C8683810011DD33 /* WatchKitUtils WatchKit App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "WatchKitUtils WatchKit App.entitlements"; sourceTree = "<group>"; };
+		E738CC251C86838D0011DD33 /* WatchKitUtils WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "WatchKitUtils WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		E7865DE41C7C44FB00B88FD5 /* WatchKitUtils.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchKitUtils.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7865DE71C7C44FB00B88FD5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7865DE91C7C44FB00B88FD5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +136,7 @@
 		E7865DE61C7C44FB00B88FD5 /* WatchKitUtils */ = {
 			isa = PBXGroup;
 			children = (
+				E738CC231C8683680011DD33 /* WatchKitUtils.entitlements */,
 				E7865DE71C7C44FB00B88FD5 /* AppDelegate.swift */,
 				E7865DE91C7C44FB00B88FD5 /* ViewController.swift */,
 				E72278301C7D7D3700E37AB1 /* TableViewController.swift */,
@@ -147,6 +151,7 @@
 		E7865DFA1C7C44FB00B88FD5 /* WatchKitUtils WatchKit App */ = {
 			isa = PBXGroup;
 			children = (
+				E738CC241C8683810011DD33 /* WatchKitUtils WatchKit App.entitlements */,
 				E7865DFB1C7C44FB00B88FD5 /* Interface.storyboard */,
 				E7865DFE1C7C44FB00B88FD5 /* Assets.xcassets */,
 				E7865E001C7C44FB00B88FD5 /* Info.plist */,
@@ -157,6 +162,7 @@
 		E7865E091C7C44FB00B88FD5 /* WatchKitUtils WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				E738CC251C86838D0011DD33 /* WatchKitUtils WatchKit Extension.entitlements */,
 				E7865E0A1C7C44FB00B88FD5 /* InterfaceController.swift */,
 				E7865E0C1C7C44FB00B88FD5 /* ExtensionDelegate.swift */,
 				E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */,
@@ -233,12 +239,30 @@
 				TargetAttributes = {
 					E7865DE31C7C44FB00B88FD5 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = WXTYN99SPJ;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					E7865DF51C7C44FB00B88FD5 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = WXTYN99SPJ;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					E7865E041C7C44FB00B88FD5 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = WXTYN99SPJ;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -311,8 +335,8 @@
 			files = (
 				E72278361C7D86EC00E37AB1 /* DataTransfer.swift in Sources */,
 				E7865E0D1C7C44FB00B88FD5 /* ExtensionDelegate.swift in Sources */,
-				E7865E201C7C47FC00B88FD5 /* Connection.swift in Sources */,
 				E7865E0B1C7C44FB00B88FD5 /* InterfaceController.swift in Sources */,
+				E738CC221C8680930011DD33 /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,10 +467,14 @@
 		E7865E141C7C44FB00B88FD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "WatchKitUtils WatchKit Extension/WatchKitUtils WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				INFOPLIST_FILE = "WatchKitUtils WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -457,10 +485,14 @@
 		E7865E151C7C44FB00B88FD5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "WatchKitUtils WatchKit Extension/WatchKitUtils WatchKit Extension.entitlements";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				INFOPLIST_FILE = "WatchKitUtils WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -472,11 +504,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "WatchKitUtils WatchKit App/WatchKitUtils WatchKit App.entitlements";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = WatchKitUtils_WatchKit_Extension;
 				INFOPLIST_FILE = "WatchKitUtils WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -488,11 +524,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "WatchKitUtils WatchKit App/WatchKitUtils WatchKit App.entitlements";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = WatchKitUtils_WatchKit_Extension;
 				INFOPLIST_FILE = "WatchKitUtils WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -505,11 +545,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = WatchKitUtils/WatchKitUtils.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				INFOPLIST_FILE = WatchKitUtils/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -518,11 +562,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = WatchKitUtils/WatchKitUtils.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				INFOPLIST_FILE = WatchKitUtils/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = non.com.vn.WatchKitUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

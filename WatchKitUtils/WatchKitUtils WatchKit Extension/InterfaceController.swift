@@ -39,14 +39,16 @@ class InterfaceController: WKInterfaceController {
         }
         
         if (self.connection.didFinishTransferFile == nil){
-            self.connection.didFinishTransferFile = { (url, metadata) -> Void in
-                print("\(url)");
+            self.connection.didFinishTransferFile = { (file, error) -> Void in
+                
             }
         }
         
         if (self.connection.didReceiveFile == nil){
             self.connection.didReceiveFile = { (url, metadata) -> Void in
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    print("\(url)\n")
+                    print("\(metadata)\n")
                     let data = NSData(contentsOfURL: url)
                     if (data == nil){
                         return
@@ -99,6 +101,15 @@ class InterfaceController: WKInterfaceController {
 
     @IBAction func didTapSendButton() {
         self.connection.sendMessage(["Message": "Call me apple watch"])
+    }
+    
+    func showAlert(message: String!){
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            let cancelAction = WKAlertAction(title: "OK", style: WKAlertActionStyle.Cancel, handler: {() -> Void in
+            })
+            
+            self.presentAlertControllerWithTitle(nil, message: message, preferredStyle: WKAlertControllerStyle.Alert, actions: [cancelAction])
+        }
     }
 
 }

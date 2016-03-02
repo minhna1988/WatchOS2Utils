@@ -16,17 +16,21 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         case SendMessage = 1
         case SendFile = 2
         case SendData = 3
+        case ChooseFile = 4
     }
     
     @IBOutlet weak var connectionStateLabel: UILabel!
     @IBOutlet weak var receivedLabel: UILabel!
     @IBOutlet weak var messageTextField: UITextField!
-    @IBOutlet weak var browseFileTextField: UITextField!
+    @IBOutlet weak var browseButton: UIButton!
+    @IBOutlet weak var selectedImageView: UIImageView!
+    @IBOutlet weak var sendButton: UIButton!
     
     var tempDirectory: String = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).last!
     
     var connection: DataTransfer! = nil
     var watchSize: CGSize = CGSizeMake(272, 340)
+    var selectedFile: [String:AnyObject]! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,35 +56,19 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         
         if (self.connection.didFinishTransferFile == nil){
             self.connection.didFinishTransferFile = { (file, error) -> Void in
-
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.browseFileTextField.enabled = true
+                    self.browseButton.enabled = true
                     if (error != nil){
-                        self.browseFileTextField.text = "Error: \(error!.description)"
+                        self.sendButton .setTitle("Error", forState: UIControlState.Normal)
                     } else {
-                        self.browseFileTextField.text = "Sent: \(file.file.fileURL.absoluteString)"
+                        self.sendButton .setTitle("Sent", forState: UIControlState.Normal)
                     }
                 })
             }
         }
     }
     
-    @IBAction func didTapSendButton(sender: UIButton) {
-        let type: ActionType = ActionType(rawValue: sender.tag)!
-        switch (type){
-        case .SendMessage:
-            if (self.messageTextField.text == nil){
-                return
-            }
-            self.connection.sendMessage(["Message": messageTextField.text!])
-                break
-            case .SendFile:
-                
-                break
-            case .SendData:
-                break
-        }
-    }
+
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if (object === self.connection){
@@ -93,6 +81,30 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         }
     }
     
+    // MARK: Button Event
+    @IBAction func didTapSendButton(sender: UIButton) {
+        let type: ActionType = ActionType(rawValue: sender.tag)!
+        switch (type){
+        case .SendMessage:
+            if (self.messageTextField.text == nil){
+                return
+            }
+            self.connection.sendMessage(["Message": messageTextField.text!])
+            break
+        case .SendFile:
+            self.browseButton.enabled = false
+            self.sendButton.enabled = false
+            self.sendButton .setTitle("Sending...", forState: UIControlState.Normal)
+            self.connection.sendFile(NSURL(fileURLWithPath: self.selectedFile!["file"] as! String), metadata: self.selectedFile!["metadata"] as? [String:AnyObject])
+            break
+        case .SendData:
+            break
+        case .ChooseFile:
+            self.openPhoto(UIImagePickerControllerSourceType.PhotoLibrary)
+            break
+        }
+    }
+    
     // MARK: Text Field Delegate
     func textFieldDidBeginEditing(textField: UITextField) {
         let type: ActionType = ActionType(rawValue: textField.tag)!
@@ -100,7 +112,7 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
         case .SendMessage:
             break
         case .SendFile:
-            self.openPhoto(UIImagePickerControllerSourceType.PhotoLibrary)
+            
             break;
         default:
             break
@@ -145,13 +157,11 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
     
     // MARK: UIImagePicker Delegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        
-        print("\(info)");
+
         var image: UIImage? = info[UIImagePickerControllerOriginalImage] as! UIImage?;
         if (image == nil) {
             return
         }
-        
         switch (picker.sourceType){
         case .PhotoLibrary:
             picker.dismissViewControllerAnimated(true, completion: { () -> Void in
@@ -162,8 +172,7 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
                     let id = urlString.substringWithRange(Range(start: startRange!.endIndex, end: endRange!.startIndex))
                     let ext = urlString.substringWithRange(Range(start: endRange!.endIndex, end: urlString.endIndex)).lowercaseString
                     let path = self.tempDirectory.stringByAppendingFormat("/%@.%@", id, ext)
-                    print("\(path)");
-                    
+
                     image = self.resizeImage(image!, targetSize: self.watchSize)
                     
                     let imageData = ext == "jpg" ? UIImageJPEGRepresentation(image!, 1.0) : (ext == "png" ? UIImagePNGRepresentation(image!) : nil)
@@ -174,9 +183,11 @@ class TableViewController: UITableViewController, UITextFieldDelegate, UINavigat
                     if (!success){
                         return
                     }
-                    self.browseFileTextField.enabled = false
-                    self.browseFileTextField.text = "Sending..."
-                    self.connection.sendFile(NSURL(fileURLWithPath: path), metadata: ["name":id, "ext":ext])
+                    self.selectedImageView.image = image
+                    self.sendButton.enabled = true
+                    self.sendButton .setTitle("Send", forState: UIControlState.Normal)
+                    self.browseButton .setTitle("", forState: UIControlState.Normal)
+                    self.selectedFile = ["file": path, "metadata": ["name":id, "ext":ext]]
                 }
             })
             break

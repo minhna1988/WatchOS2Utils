@@ -17,8 +17,7 @@ class DataTransfer: Connection {
     
     var didReceiveMessage: ([String : AnyObject]->Void)! = nil
     var didReceiveFile: ((NSURL, [String:AnyObject]?)->Void)! = nil
-    var didFinishTransferFile: ((WCSessionFileTransfer, NSError?)->Void)! = nil
-    
+    var didFinishTransferFile: ((WCSessionFileTransfer?, NSError?)->Void)! = nil
     
     class var getInstance: DataTransfer{
         struct Static {
@@ -60,6 +59,10 @@ class DataTransfer: Connection {
     
     // MARK: File
     func sendFile(file: NSURL!, metadata: [String:AnyObject]?){
+        if (self.state != ConnectionState.Reachable){
+            self.didFinishTransferFile(nil, NSError(domain: "WatchKitUtils", code: 400, userInfo: ["error": self.state.rawValue]))
+            return;
+        }
         self.session.transferFile(file, metadata: metadata)
     }
     
@@ -70,6 +73,10 @@ class DataTransfer: Connection {
     }
     
     func session(session: WCSession, didFinishFileTransfer fileTransfer: WCSessionFileTransfer, error: NSError?) {
+        if (fileTransfer.transferring){
+            return
+        }
+        
         if (self.didFinishTransferFile != nil){
             self.didFinishTransferFile(fileTransfer, error)
         }
