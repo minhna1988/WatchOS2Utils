@@ -24,6 +24,7 @@
 		E7865E0D1C7C44FB00B88FD5 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E0C1C7C44FB00B88FD5 /* ExtensionDelegate.swift */; };
 		E7865E0F1C7C44FB00B88FD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */; };
 		E7865E1F1C7C47FC00B88FD5 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7865E1E1C7C47FC00B88FD5 /* Connection.swift */; };
+		E7AF92CF1C86914C00CD8A30 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = E7AF92CE1C86914C00CD8A30 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		E7865E0E1C7C44FB00B88FD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7865E101C7C44FB00B88FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E7865E1E1C7C47FC00B88FD5 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		E7AF92CE1C86914C00CD8A30 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 		E7865DDB1C7C44FB00B88FD5 = {
 			isa = PBXGroup;
 			children = (
+				E7AF92CE1C86914C00CD8A30 /* README.md */,
 				E72278341C7D86EC00E37AB1 /* DataTransfer.swift */,
 				E7865E1E1C7C47FC00B88FD5 /* Connection.swift */,
 				E7865DE61C7C44FB00B88FD5 /* WatchKitUtils */,
@@ -321,6 +324,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7AF92CF1C86914C00CD8A30 /* README.md in Sources */,
 				E7865DEA1C7C44FB00B88FD5 /* ViewController.swift in Sources */,
 				E72278351C7D86EC00E37AB1 /* DataTransfer.swift in Sources */,
 				E72278311C7D7D3700E37AB1 /* TableViewController.swift in Sources */,
